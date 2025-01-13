@@ -26,7 +26,7 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     steps:
-      - uses: your-username/auto-milestone-summary@v1
+      - uses: your-username/auto-milestone-summary-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -58,7 +58,7 @@ npm run build
 你可以通过 `categories` 参数自定义 issue 分类：
 
 ```yaml
-- uses: your-username/auto-milestone-summary@v1
+- uses: your-username/auto-milestone-summary-action@v1
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
     categories: '["优化", "新功能", "修复", "文档"]'

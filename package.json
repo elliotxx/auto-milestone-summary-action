@@ -1,5 +1,5 @@
 {
-  "name": "auto-milestone-summary",
+  "name": "auto-milestone-summary-action",
   "version": "1.0.0",
   "description": "GitHub Action to automatically generate milestone planning issues",
   "main": "dist/index.js",
