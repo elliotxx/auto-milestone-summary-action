@@ -42,5 +42,5 @@ jobs:
             ```yaml
             - uses: elliotxx/auto-milestone-summary-action@${{ github.ref_name }}
               with:
-                token: \${{ secrets.GITHUB_TOKEN }}
+                token: ${{ '{' }}{{ secrets.GITHUB_TOKEN }}{{ '}' }}
             ```
