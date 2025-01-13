@@ -1,22 +1,22 @@
-name: 'Auto Milestone Summary'
-description: 'Automatically generate and update milestone planning issues'
+name: 'Auto Milestone Summary Action'
+description: 'Automatically generate and update planning issues based on milestones'
+author: 'elliotxx'
 branding:
   icon: 'clipboard'
   color: 'blue'
 
 inputs:
   token:
-    description: 'GitHub token with repo scope'
+    description: 'GitHub token for API access'
     required: true
   planning_label:
-    description: 'Label for planning issues'
+    description: 'Label to identify planning issues'
+    required: false
     default: 'planning'
   categories:
-    description: 'Issue categories (JSON array)'
-    default: '["bug", "feature", "documentation", "maintenance"]'
-  template:
-    description: 'Custom template file path'
+    description: 'JSON array of category labels'
     required: false
+    default: '["bug", "documentation", "enhancement"]'
 
 runs:
   using: 'node16'
