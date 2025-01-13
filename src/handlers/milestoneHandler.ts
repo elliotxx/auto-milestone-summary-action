@@ -27,16 +27,7 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
     core.info(`- Event: ${context.eventName}`);
 
     const octokit = github.getOctokit(token);
-    
-    // Get repository information from context
-    const owner = context.repo?.owner || context.payload?.repository?.owner?.login;
-    const repo = context.repo?.repo || context.payload?.repository?.name;
-
-    if (!owner || !repo) {
-      core.setFailed('Could not determine repository owner and name');
-      return;
-    }
-
+    const { owner, repo } = context.repo;
     const milestoneNumber = context.payload.milestone?.number;
 
     if (!milestoneNumber) {
