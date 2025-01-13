@@ -43,5 +43,11 @@ export interface ActionContext extends Omit<Context, 'issue' | 'repo'> {
         number: number;
       };
     };
+    repository: {
+      owner: {
+        login: string;
+      };
+      name: string;
+    };
   };
 }

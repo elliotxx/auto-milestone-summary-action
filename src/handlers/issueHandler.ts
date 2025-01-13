@@ -15,6 +15,10 @@ export async function handleIssue(context: ActionContext): Promise<void> {
       core.info('Issue has milestone, updating milestone planning...');
       await handleMilestone({
         ...context,
+        repo: {
+          owner: context.payload.repository.owner.login,
+          repo: context.payload.repository.name
+        },
         payload: {
           ...context.payload,
           milestone: context.payload.issue.milestone
