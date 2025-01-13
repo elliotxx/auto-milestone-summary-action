@@ -18,6 +18,12 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
     const categoriesInput = process.env.INPUT_CATEGORIES || core.getInput('categories') || JSON.stringify(DEFAULT_CATEGORIES);
     const categories = JSON.parse(categoriesInput) as string[];
 
+    // Log key parameters
+    core.info('Action Parameters:');
+    core.info(`- Planning Label: ${planningLabel}`);
+    core.info(`- Categories: ${JSON.stringify(categories)}`);
+    core.info(`- Event: ${context.eventName}`);
+
     const octokit = github.getOctokit(token);
     const { owner, repo } = context.repo;
     const milestoneNumber = context.payload.milestone?.number;
@@ -34,6 +40,13 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
       milestone_number: milestoneNumber
     });
 
+    // Log milestone info
+    core.info('Milestone Info:');
+    core.info(`- Title: ${milestone.title}`);
+    core.info(`- Number: ${milestone.number}`);
+    core.info(`- State: ${milestone.state}`);
+    core.info(`- Due Date: ${milestone.due_on || 'Not set'}`);
+
     // Skip if milestone is closed
     if (milestone.state === 'closed') {
       core.info(`Milestone #${milestoneNumber} is closed, skipping...`);
@@ -47,6 +60,12 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
       milestone: String(milestoneNumber),
       state: 'all'
     });
+
+    // Log issues info
+    core.info('Issues Info:');
+    core.info(`- Total Issues: ${issues.length}`);
+    core.info(`- Open Issues: ${issues.filter(i => i.state === 'open').length}`);
+    core.info(`- Closed Issues: ${issues.filter(i => i.state === 'closed').length}`);
 
     // Convert GitHub API response to our Issue type
     const formattedIssues: Issue[] = issues.map(issue => ({

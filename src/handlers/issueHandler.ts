@@ -1,32 +1,27 @@
 import * as core from '@actions/core';
+import * as github from '@actions/github';
 import { handleMilestone } from './milestoneHandler';
 import { ActionContext } from '../types';
 
 export async function handleIssue(context: ActionContext): Promise<void> {
   try {
-    if (!context.issue?.milestone) {
-      core.info('Issue has no milestone, skipping...');
-      return;
-    }
+    // Log issue event info
+    core.info('Issue Event Info:');
+    core.info(`- Issue Number: ${context.payload.issue?.number}`);
+    core.info(`- Milestone Number: ${context.payload.issue?.milestone?.number}`);
 
-    const milestoneNumber = context.issue.milestone.number;
-    core.info(`Processing milestone #${milestoneNumber}`);
-
-    // Create context for milestone handling
-    const milestoneContext: ActionContext = {
-      ...context,
-      payload: {
-        ...context.payload,
-        milestone: {
-          number: milestoneNumber,
-          title: '', // Will be fetched by milestoneHandler
-          description: null,
-          due_on: null
+    // If the issue has a milestone, handle it
+    if (context.payload.issue?.milestone) {
+      core.info('Issue has milestone, updating milestone planning...');
+      await handleMilestone({
+        ...context,
+        payload: {
+          ...context.payload,
         }
-      }
-    };
-
-    await handleMilestone(milestoneContext);
+      });
+    } else {
+      core.info('Issue has no milestone, skipping...');
+    }
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
