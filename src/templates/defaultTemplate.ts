@@ -1,3 +1,4 @@
+import * as core from '@actions/core';
 import { Issue, Milestone } from '../types';
 
 // Generate progress bar
@@ -24,9 +25,22 @@ function generateCategorySection(
   issues: Issue[],
   category: string
 ): string {
+  // Filter issues by category (case-insensitive)
   const categoryIssues = issues.filter(issue =>
-    issue.labels.some(label => label.name.toLowerCase() === category.toLowerCase())
+    issue.labels.some(label => 
+      label.name.toLowerCase() === category.toLowerCase()
+    )
   );
+
+  // Log category info
+  core.info(`Category "${category}": ${categoryIssues.length} issues`);
+  if (categoryIssues.length > 0) {
+    core.info('Issues in this category:');
+    categoryIssues.forEach(issue => {
+      core.info(`- #${issue.number} (${issue.state})`);
+      core.info(`  Labels: ${issue.labels.map(l => l.name).join(', ')}`);
+    });
+  }
 
   if (categoryIssues.length === 0) return '';
 
@@ -39,7 +53,7 @@ function generateCategorySection(
         .map(label => `\`${label.name}\``)
         .join(' ');
       const labelsText = labels ? ` ${labels}` : '';
-      return `- ${checkbox} #${issue.number} ${issue.title}${assigneeText}${labelsText}`;
+      return `- ${checkbox} #${issue.number} ${assigneeText}${labelsText}`;
     })
     .join('\n');
 
@@ -53,13 +67,24 @@ function generateUncategorizedSection(
   issues: Issue[],
   categories: string[]
 ): string {
-  const uncategorizedIssues = issues.filter(
-    issue => !issue.labels.some(label =>
+  // Filter issues that don't belong to any category (case-insensitive)
+  const uncategorizedIssues = issues.filter(issue =>
+    !issue.labels.some(label =>
       categories.some(category =>
-        category.toLowerCase() === label.name.toLowerCase()
+        label.name.toLowerCase() === category.toLowerCase()
       )
     )
   );
+
+  // Log uncategorized info
+  core.info(`Uncategorized issues: ${uncategorizedIssues.length}`);
+  if (uncategorizedIssues.length > 0) {
+    core.info('Issues without category:');
+    uncategorizedIssues.forEach(issue => {
+      core.info(`- #${issue.number} (${issue.state})`);
+      core.info(`  Labels: ${issue.labels.map(l => l.name).join(', ')}`);
+    });
+  }
 
   if (uncategorizedIssues.length === 0) return '';
 
@@ -71,7 +96,7 @@ function generateUncategorizedSection(
         .map(label => `\`${label.name}\``)
         .join(' ');
       const labelsText = labels ? ` ${labels}` : '';
-      return `- ${checkbox} #${issue.number} ${issue.title}${assigneeText}${labelsText}`;
+      return `- ${checkbox} #${issue.number} ${assigneeText}${labelsText}`;
     })
     .join('\n');
 
@@ -85,13 +110,25 @@ export function generatePlanningContent(
   issues: Issue[],
   categories: string[]
 ): string {
+  core.info('\nGenerating planning content...');
+  core.info(`Categories: ${categories.join(', ')}`);
+  
+  // Calculate statistics
   const totalIssues = issues.length;
   const completedIssues = issues.filter(issue => issue.state === 'closed').length;
   const inProgressIssues = totalIssues - completedIssues;
 
+  // Log statistics
+  core.info('\nIssue Statistics:');
+  core.info(`- Total Issues: ${totalIssues}`);
+  core.info(`- Completed: ${completedIssues}`);
+  core.info(`- In Progress: ${inProgressIssues}`);
+  core.info(`- Progress: ${Math.round((completedIssues / totalIssues) * 100)}%`);
+
   const progressBar = generateProgressBar(completedIssues, totalIssues);
   const dueDate = formatDate(milestone.due_on);
 
+  // Generate main content
   let content = `# ${milestone.title} Planning
 
 ## Overview
@@ -107,13 +144,14 @@ ${milestone.description || 'No description provided.'}
 ## Tasks by Category
 `;
 
+  core.info('\nProcessing categories...');
   // Generate sections for each category
-  categories.forEach(category => {
+  for (const category of categories) {
     const section = generateCategorySection(issues, category);
     if (section) {
       content += '\n' + section;
     }
-  });
+  }
 
   // Generate uncategorized section
   const uncategorizedSection = generateUncategorizedSection(issues, categories);
@@ -133,5 +171,6 @@ ${milestone.description || 'No description provided.'}
     timeZoneName: 'short'
   })}`;
 
+  core.info('\nPlanning content generated successfully.');
   return content;
 }
