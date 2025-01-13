@@ -18,6 +18,12 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Checkout action
+      uses: actions/checkout@v3
+      with:
+        repository: elliotxx/auto-milestone-summary-action
+        path: .github/actions/auto-milestone-summary-action
+
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
@@ -25,10 +31,12 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: npm install
+      working-directory: .github/actions/auto-milestone-summary-action
+      run: npm ci
 
     - name: Build and Run
       shell: bash
+      working-directory: .github/actions/auto-milestone-summary-action
       env:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_PLANNING_LABEL: ${{ inputs.planning_label }}
