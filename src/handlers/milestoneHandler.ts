@@ -53,13 +53,35 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
       return;
     }
 
-    // Get all issues for this milestone
-    const { data: allIssues } = await octokit.rest.issues.listForRepo({
-      owner,
-      repo,
-      milestone: String(milestoneNumber),
-      state: 'all'
-    });
+    // Get all issues for this milestone using pagination
+    type IssueResponse = Awaited<ReturnType<typeof octokit.rest.issues.listForRepo>>;
+    type IssueItem = IssueResponse['data'][number];
+    let allIssues: IssueItem[] = [];
+    let page = 1;
+    const per_page = 30;
+    
+    while (true) {
+      core.info(`Fetching page ${page} of issues...`);
+      const { data: issues } = await octokit.rest.issues.listForRepo({
+        owner,
+        repo,
+        milestone: String(milestoneNumber),
+        state: 'all',
+        per_page,
+        page
+      });
+
+      allIssues = allIssues.concat(issues);
+      
+      // If we got less items than per_page, we've reached the end
+      if (issues.length < per_page) {
+        break;
+      }
+      
+      page++;
+    }
+
+    core.info(`Fetched ${allIssues.length} total items across ${page} pages`);
 
     // Filter out pull requests and log details for debugging
     const issues = allIssues.filter(item => {
@@ -68,7 +90,9 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
       core.debug(`- Has PR field: ${!!item.pull_request}`);
       core.debug(`- Type: ${item.pull_request ? 'PR' : 'Issue'}`);
       core.debug(`- Title: ${item.title}`);
-      core.debug(`- Labels: ${item.labels.map((l: any) => l.name).join(', ')}`);
+      core.debug(`- Labels: ${item.labels.map((l) => 
+        typeof l === 'string' ? l : (l.name || '')
+      ).join(', ')}`);
       
       // Check if it's a pull request using multiple indicators
       const isPR = item.pull_request !== undefined || // Has PR field
@@ -92,7 +116,7 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
       number: issue.number,
       state: issue.state,
       labels: issue.labels.map(label => ({
-        name: typeof label === 'string' ? label : (label.name || '')
+        name: typeof label === 'string' ? label : (label.name ?? '')
       })).filter(label => label.name !== ''),
       assignee: issue.assignee ? { login: issue.assignee.login } : undefined
     }));
