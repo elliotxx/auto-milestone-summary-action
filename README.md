@@ -1,17 +1,17 @@
-# Auto Milestone Summary
+# Auto Milestone Summary Action
 
-自动为 GitHub 里程碑生成和更新规划 issue 的 GitHub Action。
+A GitHub Action that automatically generates and updates planning issues for milestones.
 
-## 功能
+## Features
 
-- 自动创建和更新里程碑规划
-- 根据标签分类 issues
-- 实时更新规划内容
-- 支持自定义模板和分类
+- Auto-create and update milestone planning
+- Categorize issues by labels
+- Real-time planning updates
+- Support custom templates and categories
 
-## 使用方法
+## Usage
 
-1. 在你的仓库中创建 `.github/workflows/milestone-planning.yml`：
+1. Create `.github/workflows/milestone-planning.yml` in your repository:
 
 ```yaml
 name: Milestone Planning
@@ -31,47 +31,47 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-## 配置选项
+## Configuration
 
-| 参数 | 描述 | 必填 | 默认值 |
-|------|------|------|--------|
-| token | GitHub token | 是 | - |
-| planning_label | 规划 issue 的标签 | 否 | planning |
-| categories | Issue 分类（JSON 数组） | 否 | ["bug", "feature", "documentation", "maintenance"] |
-| template | 自定义模板文件路径 | 否 | - |
+| Parameter | Description | Required | Default |
+|-----------|-------------|----------|---------|
+| token | GitHub token | Yes | - |
+| planning_label | Planning issue label | No | planning |
+| categories | Issue categories (JSON array) | No | ["bug", "feature", "documentation", "maintenance"] |
+| template | Custom template file path | No | - |
 
-## 开发
+## Development
 
 ```bash
-# 安装依赖
+# Install dependencies
 npm install
 
-# 运行测试
+# Run tests
 npm test
 
-# 构建
+# Build
 npm run build
 ```
 
-## 自定义分类
+## Custom Categories
 
-你可以通过 `categories` 参数自定义 issue 分类：
+You can customize issue categories using the `categories` parameter:
 
 ```yaml
 - uses: your-username/auto-milestone-summary-action@v1
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
-    categories: '["优化", "新功能", "修复", "文档"]'
+    categories: '["bug", "feature", "enhancement", "documentation"]'
 ```
 
-## 输出示例
+## Output Example
 
-规划 issue 会包含以下内容：
+The planning issue will contain:
 
-- 里程碑概述（总任务数、完成情况等）
-- 按分类组织的任务列表
-- 任务状态和负责人
-- 自动更新时间
+- Milestone overview (total issues, completion status)
+- Categorized task list
+- Task status and assignees
+- Auto-update timestamp
 
 ## License
 
