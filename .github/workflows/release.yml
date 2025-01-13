@@ -1,35 +1,46 @@
 name: Release
+
 on:
   push:
     tags:
       - 'v*'
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-          
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Run tests
         run: npm test
-        
+
       - name: Build
         run: npm run build
-        
+
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+          files: |
+            dist/index.js
+            dist/index.js.map
+            dist/sourcemap-register.js
+          body: |
+            ## Changes
+            Please refer to the commit history for detailed changes.
+
+            ## Usage
+            ```yaml
+            - uses: elliotxx/auto-milestone-summary-action@${{ github.ref_name }}
+              with:
+                token: \${{ secrets.GITHUB_TOKEN }}
+            ```
