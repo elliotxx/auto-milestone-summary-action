@@ -16,12 +16,14 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
     const token = process.env.INPUT_TOKEN || core.getInput('token', { required: true });
     const planningLabel = process.env.INPUT_PLANNING_LABEL || core.getInput('planning_label') || 'planning';
     const categoriesInput = process.env.INPUT_CATEGORIES || core.getInput('categories') || JSON.stringify(DEFAULT_CATEGORIES);
+    const excludePR = (process.env.INPUT_EXCLUDE_PR || core.getInput('exclude_pr') || 'true').toLowerCase() === 'true';
     const categories = JSON.parse(categoriesInput) as string[];
 
     // Log key parameters
     core.info('Action Parameters:');
     core.info(`- Planning Label: ${planningLabel}`);
     core.info(`- Categories: ${JSON.stringify(categories)}`);
+    core.info(`- Exclude PR: ${excludePR}`);
     core.info(`- Event: ${context.eventName}`);
 
     const octokit = github.getOctokit(token);
@@ -83,30 +85,23 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
 
     core.info(`Fetched ${allIssues.length} total items across ${page} pages`);
 
-    // Filter out pull requests and log details for debugging
-    const issues = allIssues.filter(item => {
-      // Log item details for debugging
-      core.debug(`Processing item #${item.number}:`);
-      core.debug(`- Has PR field: ${!!item.pull_request}`);
-      core.debug(`- Type: ${item.pull_request ? 'PR' : 'Issue'}`);
-      core.debug(`- Title: ${item.title}`);
-      core.debug(`- Labels: ${item.labels.map((l) => 
-        typeof l === 'string' ? l : (l.name || '')
-      ).join(', ')}`);
-      
-      // Check if it's a pull request using multiple indicators
+    // Filter out pull requests if excludePR is true
+    const issues = excludePR ? allIssues.filter(item => {
       const isPR = item.pull_request !== undefined || // Has PR field
                   item.html_url?.includes('/pull/') || // URL contains /pull/
                   'pull_request' in item; // Has PR property
-      
       return !isPR;
-    });
+    }) : allIssues;
 
     // Log issues info
     core.info('Issues Info:');
-    core.info(`- Total Items: ${allIssues.length}`);
-    core.info(`- Issues (excluding PRs): ${issues.length}`);
-    core.info(`- Pull Requests: ${allIssues.length - issues.length}`);
+    if (excludePR) {
+      core.info(`- Total Items: ${allIssues.length}`);
+      core.info(`- Issues (excluding PRs): ${issues.length}`);
+      core.info(`- Pull Requests: ${allIssues.length - issues.length}`);
+    } else {
+      core.info(`- Total Items: ${issues.length}`);
+    }
     core.info(`- Open Issues: ${issues.filter(i => i.state === 'open').length}`);
     core.info(`- Closed Issues: ${issues.filter(i => i.state === 'closed').length}`);
 

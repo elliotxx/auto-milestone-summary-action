@@ -1,19 +1,23 @@
 name: 'Auto Milestone Summary Action'
-description: 'Automatically generate and update planning issues based on milestones'
+description: 'Automatically generate and update planning issues based on GitHub milestones'
 author: 'elliotxx'
 
 inputs:
   token:
-    description: 'GitHub token for API access'
+    description: 'GitHub token'
     required: true
   planning_label:
-    description: 'Label to identify planning issues'
+    description: 'Label for planning issues'
     required: false
     default: 'planning'
   categories:
-    description: 'JSON array of category labels'
+    description: 'Categories for issues (JSON array of strings)'
     required: false
     default: '["bug", "documentation", "enhancement"]'
+  exclude_pr:
+    description: 'Whether to exclude pull requests from the summary'
+    required: false
+    default: 'true'
 
 runs:
   using: 'composite'
@@ -41,6 +45,7 @@ runs:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_PLANNING_LABEL: ${{ inputs.planning_label }}
         INPUT_CATEGORIES: ${{ inputs.categories }}
+        INPUT_EXCLUDE_PR: ${{ inputs.exclude_pr }}
       run: |
         npm run build
         node dist/index.js
