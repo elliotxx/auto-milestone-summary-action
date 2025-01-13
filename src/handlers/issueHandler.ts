@@ -5,10 +5,9 @@ import { ActionContext } from '../types';
 
 export async function handleIssue(context: ActionContext): Promise<void> {
   try {
-    // Log issue event info
-    core.info('Issue Event Info:');
-    core.info(`- Issue Number: ${context.payload.issue?.number}`);
-    core.info(`- Milestone Number: ${context.payload.issue?.milestone?.number}`);
+    // Log issue event info and context structure
+    core.info('Issue Event Info and Context Structure:');
+    core.info(JSON.stringify(context, null, 2));
 
     // If the issue has a milestone, handle it
     if (context.payload.issue?.milestone) {
