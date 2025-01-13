@@ -12,12 +12,16 @@ interface Milestone {
   description: string;
 }
 
+interface CategorizedIssues {
+  [key: string]: Issue[];
+}
+
 export function generatePlanningContent(
   milestone: Milestone,
   issues: Issue[],
   categories: string[]
 ): string {
-  const categorizedIssues = categorizeIssues(issues, categories);
+  const categorizedIssues: CategorizedIssues = categorizeIssues(issues, categories);
   
   return `
 # ${milestone.title} Planning
@@ -38,8 +42,8 @@ ${generateCategorySection(categorizedIssues)}
 `;
 }
 
-function categorizeIssues(issues: Issue[], categories: string[]): Record<string, Issue[]> {
-  const categorized: Record<string, Issue[]> = {
+function categorizeIssues(issues: Issue[], categories: string[]): CategorizedIssues {
+  const categorized: CategorizedIssues = {
     'Uncategorized': []
   };
   
@@ -48,15 +52,17 @@ function categorizeIssues(issues: Issue[], categories: string[]): Record<string,
   });
 
   issues.forEach(issue => {
-    let categorized = false;
+    let issueCategorized = false;
     for (const category of categories) {
-      if (issue.labels.some(label => label.name.toLowerCase().includes(category.toLowerCase()))) {
+      if (issue.labels.some(label => 
+        label.name.toLowerCase().includes(category.toLowerCase())
+      )) {
         categorized[category].push(issue);
-        categorized = true;
+        issueCategorized = true;
         break;
       }
     }
-    if (!categorized) {
+    if (!issueCategorized) {
       categorized['Uncategorized'].push(issue);
     }
   });
@@ -64,7 +70,7 @@ function categorizeIssues(issues: Issue[], categories: string[]): Record<string,
   return categorized;
 }
 
-function generateCategorySection(categorizedIssues: Record<string, Issue[]>): string {
+function generateCategorySection(categorizedIssues: CategorizedIssues): string {
   return Object.entries(categorizedIssues)
     .filter(([_, issues]) => issues.length > 0)
     .map(([category, issues]) => `

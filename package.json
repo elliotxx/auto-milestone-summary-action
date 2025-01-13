@@ -17,7 +17,7 @@
     "milestone",
     "planning"
   ],
-  "author": "Your Name",
+  "author": "elliotxx",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
