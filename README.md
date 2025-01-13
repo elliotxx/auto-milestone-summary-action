@@ -8,6 +8,7 @@ A GitHub Action that automatically generates and updates planning issues based o
 - 📋 Categorizes related issues by labels
 - 📝 Generates or updates planning summary issues
 - 🎨 Supports custom templates for planning issue content
+- ✨ Only processes open milestones
 
 ## Usage
 
@@ -133,19 +134,21 @@ jobs:
 ## How It Works
 
 1. When a milestone is created or updated:
-   - The action creates a new planning issue or updates an existing one
+   - The action checks if the milestone is open (closed milestones are skipped)
+   - Creates a new planning issue or updates an existing one
    - Issues are categorized based on their labels
    - A summary is generated with progress information
 
 2. When an issue is updated:
-   - If the issue belongs to a milestone, the corresponding planning issue is updated
+   - If the issue belongs to an open milestone, the corresponding planning issue is updated
    - The summary reflects the latest state of all issues
+   - No action is taken for issues in closed milestones
 
 3. Categories:
    - Issues are categorized based on their labels matching the category names
    - Issues without matching category labels go into "Uncategorized"
    - Each issue appears in the first matching category only
-   - By default, uses GitHub's standard labels (`bug`, `enhancement`, etc.)
+   - By default, uses GitHub's standard labels (`bug`, `enhancement`, `documentation`)
 
 ## Best Practices
 
@@ -158,6 +161,7 @@ jobs:
    - Add clear descriptions to milestones
    - Set realistic due dates
    - Assign issues to milestones when creating them
+   - Close milestones when they are completed to keep your project organized
 
 3. **Workflow Configuration**:
    - Start with the basic workflow and add more event types as needed

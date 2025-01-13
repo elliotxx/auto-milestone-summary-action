@@ -33,6 +33,12 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
       milestone_number: milestoneNumber
     });
 
+    // Skip if milestone is closed
+    if (milestone.state === 'closed') {
+      core.info(`Milestone #${milestoneNumber} is closed, skipping...`);
+      return;
+    }
+
     // Get all issues for this milestone
     const { data: issues } = await octokit.rest.issues.listForRepo({
       owner,
