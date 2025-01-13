@@ -35,7 +35,7 @@ jobs:
           categories: '["bug", "enhancement", "documentation"]'
 ```
 
-2. The action will create a planning issue that looks like this:
+2. The action will automatically create a planning issue when a milestone or related issues are created/updated/closed:
    > 🔍 [View a real example](https://github.com/KusionStack/karpor/issues/721)
 
 ```markdown
