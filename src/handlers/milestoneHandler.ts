@@ -12,9 +12,10 @@ const DEFAULT_CATEGORIES = [
 
 export async function handleMilestone(context: ActionContext): Promise<void> {
   try {
-    const token = core.getInput('token', { required: true });
-    const planningLabel = core.getInput('planning_label') || 'planning';
-    const categoriesInput = core.getInput('categories') || JSON.stringify(DEFAULT_CATEGORIES);
+    // Get inputs from environment variables
+    const token = process.env.INPUT_TOKEN || core.getInput('token', { required: true });
+    const planningLabel = process.env.INPUT_PLANNING_LABEL || core.getInput('planning_label') || 'planning';
+    const categoriesInput = process.env.INPUT_CATEGORIES || core.getInput('categories') || JSON.stringify(DEFAULT_CATEGORIES);
     const categories = JSON.parse(categoriesInput) as string[];
 
     const octokit = github.getOctokit(token);

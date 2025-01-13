@@ -1,9 +1,6 @@
 name: 'Auto Milestone Summary Action'
 description: 'Automatically generate and update planning issues based on milestones'
 author: 'elliotxx'
-branding:
-  icon: 'clipboard'
-  color: 'blue'
 
 inputs:
   token:
@@ -19,5 +16,27 @@ inputs:
     default: '["bug", "documentation", "enhancement"]'
 
 runs:
-  using: 'node16'
-  main: 'index.js'
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci
+
+    - name: Build and Run
+      shell: bash
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_PLANNING_LABEL: ${{ inputs.planning_label }}
+        INPUT_CATEGORIES: ${{ inputs.categories }}
+      run: |
+        npm run build
+        node dist/index.js
+
+branding:
+  icon: 'clipboard'
+  color: 'blue'
