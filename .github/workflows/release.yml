@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -34,13 +36,8 @@ jobs:
             dist/index.js
             dist/index.js.map
             dist/sourcemap-register.js
-          body: |
-            ## Changes
-            Please refer to the commit history for detailed changes.
-
-            ## Usage
-            ```yaml
-            - uses: elliotxx/auto-milestone-summary-action@${{ github.ref_name }}
-              with:
-                token: ${{ '{' }}{{ secrets.GITHUB_TOKEN }}{{ '}' }}
-            ```
+          generate_release_notes: true
+          body_path: ""
+          prerelease: false
+          draft: false
+          fail_on_unmatched_files: true
