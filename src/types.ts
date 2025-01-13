@@ -19,28 +19,33 @@ export interface CategorizedIssues {
   [key: string]: Issue[];
 }
 
-export interface ActionContext extends Omit<Context, 'issue' | 'repo'> {
-  issue?: {
-    number: number;
-    milestone?: {
-      number: number;
-    };
-  };
-  repo: {
+export interface ActionContext {
+  eventName: string;
+  repo?: {
     owner: string;
     repo: string;
   };
   payload: {
     milestone?: {
       number: number;
-      title: string;
-      description: string | null;
-      due_on: string | null;
+    };
+    repository?: {
+      owner: {
+        login: string;
+      };
+      name: string;
     };
     issue?: {
       number: number;
       milestone?: {
         number: number;
+      };
+    };
+    changes?: {
+      milestone?: {
+        from?: {
+          number: number;
+        };
       };
     };
   };

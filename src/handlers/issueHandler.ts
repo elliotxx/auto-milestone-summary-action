@@ -10,17 +10,24 @@ export async function handleIssue(context: ActionContext): Promise<void> {
     core.info(`- Issue Number: ${context.payload.issue?.number}`);
     core.info(`- Milestone Number: ${context.payload.issue?.milestone?.number}`);
 
-    // If the issue has a milestone, handle it
-    if (context.payload.issue?.milestone) {
-      core.info('Issue has milestone, updating milestone planning...');
-      await handleMilestone({
-        ...context,
-        payload: {
-          ...context.payload,
-        }
-      });
-    } else {
+    // Check if the issue has a milestone
+    const milestoneNumber = context.payload.issue?.milestone?.number;
+    const oldMilestoneNumber = context.payload.changes?.milestone?.from?.number;
+
+    if (!milestoneNumber && !oldMilestoneNumber) {
       core.info('Issue has no milestone, skipping...');
+      return;
+    }
+
+    // Handle both current and old milestone if they exist
+    if (milestoneNumber) {
+      core.info('Issue has milestone, updating milestone planning...');
+      await handleMilestone({ ...context, payload: { milestone: { number: milestoneNumber } } });
+    }
+
+    if (oldMilestoneNumber) {
+      core.info('Issue had old milestone, updating old milestone planning...');
+      await handleMilestone({ ...context, payload: { milestone: { number: oldMilestoneNumber } } });
     }
   } catch (error) {
     if (error instanceof Error) {
