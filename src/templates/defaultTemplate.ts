@@ -183,7 +183,8 @@ ${milestone.description || 'No description provided.'}
     hour: '2-digit',
     minute: '2-digit',
     timeZoneName: 'short'
-  })}`;
+  })}
+> ⚠️ Please do not modify this issue manually, it will be automatically updated.`;
 
   core.info('\nPlanning content generated successfully.');
   return content;
