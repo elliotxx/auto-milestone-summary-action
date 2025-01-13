@@ -49,7 +49,6 @@ function generateCategorySection(
       const checkbox = issue.state === 'closed' ? '[x]' : '[ ]';
       const assigneeText = issue.assignee ? ` (@${issue.assignee.login})` : '';
       const labels = issue.labels
-        .filter(label => label.name.toLowerCase() !== category.toLowerCase())
         .map(label => `\`${label.name}\``)
         .join(' ');
       const labelsText = labels ? ` ${labels}` : '';
