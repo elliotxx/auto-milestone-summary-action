@@ -139,30 +139,11 @@ jobs:
 3. Categories:
    - Issues are categorized based on their labels matching the category names
    - Issues without matching category labels go into "Uncategorized"
-   - Each issue appears in the first matching category only
    - By default, uses GitHub's standard labels (`bug`, `enhancement`, `documentation`)
 
 ## Limitations
 
 - ⚠️ Only processes open milestones
-
-## Best Practices
-
-1. **Label Management**:
-   - Use consistent labels that match your categories
-   - Consider using GitHub's default labels for better integration
-   - Add custom labels only when needed for specific workflows
-
-2. **Milestone Planning**:
-   - Add clear descriptions to milestones
-   - Set realistic due dates
-   - Assign issues to milestones when creating them
-   - Close milestones when they are completed to keep your project organized
-
-3. **Workflow Configuration**:
-   - Start with the basic workflow and add more event types as needed
-   - Use custom categories that match your team's workflow
-   - Consider using a dedicated label for planning issues
 
 ## License
 
