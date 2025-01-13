@@ -61,8 +61,22 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
       state: 'all'
     });
 
-    // Filter out pull requests
-    const issues = allIssues.filter(item => !item.pull_request);
+    // Filter out pull requests and log details for debugging
+    const issues = allIssues.filter(item => {
+      // Log item details for debugging
+      core.debug(`Processing item #${item.number}:`);
+      core.debug(`- Has PR field: ${!!item.pull_request}`);
+      core.debug(`- Type: ${item.pull_request ? 'PR' : 'Issue'}`);
+      core.debug(`- Title: ${item.title}`);
+      core.debug(`- Labels: ${item.labels.map((l: any) => l.name).join(', ')}`);
+      
+      // Check if it's a pull request using multiple indicators
+      const isPR = item.pull_request !== undefined || // Has PR field
+                  item.html_url?.includes('/pull/') || // URL contains /pull/
+                  'pull_request' in item; // Has PR property
+      
+      return !isPR;
+    });
 
     // Log issues info
     core.info('Issues Info:');
