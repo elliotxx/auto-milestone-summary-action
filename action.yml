@@ -1,0 +1,23 @@
+name: 'Auto Milestone Summary'
+description: 'Automatically generate and update milestone planning issues'
+branding:
+  icon: 'clipboard'
+  color: 'blue'
+
+inputs:
+  token:
+    description: 'GitHub token with repo scope'
+    required: true
+  planning_label:
+    description: 'Label for planning issues'
+    default: 'planning'
+  categories:
+    description: 'Issue categories (JSON array)'
+    default: '["bug", "feature", "documentation", "maintenance"]'
+  template:
+    description: 'Custom template file path'
+    required: false
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
