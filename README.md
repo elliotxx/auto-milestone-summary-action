@@ -1,6 +1,7 @@
 # Auto Milestone Summary Action
 
-A GitHub Action that automatically generates and updates planning issues for milestones.
+A GitHub Action that automatically generates and updates planning issues for milestones. 
+A GitHub Action that automatically monitors milestone changes, categorizes related issues by labels, and generates/updates a planning summary issue to help teams better track and manage project progress.
 
 ## Features
 
@@ -26,7 +27,7 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     steps:
-      - uses: your-username/auto-milestone-summary-action@v1
+      - uses: elliotxx/auto-milestone-summary-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -35,9 +36,9 @@ jobs:
 
 | Parameter | Description | Required | Default |
 |-----------|-------------|----------|---------|
-| token | GitHub token | Yes | - |
-| planning_label | Planning issue label | No | planning |
-| categories | Issue categories (JSON array) | No | ["bug", "feature", "documentation", "maintenance"] |
+| token | GitHub token for API authentication | Yes | - |
+| planning_label | Label for identifying planning issues | No | planning |
+| categories | Issue categories as JSON array | No | ["bug", "feature", "documentation", "maintenance"] |
 | template | Custom template file path | No | - |
 
 ## Development
@@ -53,12 +54,10 @@ npm test
 npm run build
 ```
 
-## Custom Categories
-
-You can customize issue categories using the `categories` parameter:
+## Custom Categories Example
 
 ```yaml
-- uses: your-username/auto-milestone-summary-action@v1
+- uses: elliotxx/auto-milestone-summary-action@v1
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
     categories: '["bug", "feature", "enhancement", "documentation"]'
