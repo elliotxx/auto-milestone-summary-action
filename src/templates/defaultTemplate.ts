@@ -114,17 +114,17 @@ export function generatePlanningContent(
   
   // Calculate statistics
   const totalIssues = issues.length;
-  const completedIssues = issues.filter(issue => issue.state === 'closed').length;
-  const inProgressIssues = totalIssues - completedIssues;
+  const completedIssuesCount = issues.filter(issue => issue.state === 'closed').length;
+  const inProgressIssues = totalIssues - completedIssuesCount;
 
   // Log statistics
   core.info('\nIssue Statistics:');
   core.info(`- Total Issues: ${totalIssues}`);
-  core.info(`- Completed: ${completedIssues}`);
+  core.info(`- Completed: ${completedIssuesCount}`);
   core.info(`- In Progress: ${inProgressIssues}`);
-  core.info(`- Progress: ${Math.round((completedIssues / totalIssues) * 100)}%`);
+  core.info(`- Progress: ${Math.round((completedIssuesCount / totalIssues) * 100)}%`);
 
-  const progressBar = generateProgressBar(completedIssues, totalIssues);
+  const progressBar = generateProgressBar(completedIssuesCount, totalIssues);
   const dueDate = formatDate(milestone.due_on);
 
   // Generate main content
@@ -133,7 +133,7 @@ export function generatePlanningContent(
 ## Overview
 - Progress: ${progressBar}
 - Total Issues: ${totalIssues}
-  - ✅ Completed: ${completedIssues}
+  - ✅ Completed: ${completedIssuesCount}
   - 🚧 In Progress: ${inProgressIssues}
 - Due Date: ${dueDate}
 
@@ -158,15 +158,16 @@ ${milestone.description || 'No description provided.'}
     content += '\n' + uncategorizedSection;
   }
 
-  // Add contributors section
-  const contributors = new Set(issues
-    .filter(issue => issue.assignee)
-    .map(issue => issue.assignee!.login)
+  // Add contributors section (only for completed issues)
+  const completedIssues = issues.filter((issue: Issue) => issue.state === 'closed');
+  const contributors = new Set(completedIssues
+    .filter((issue: Issue) => issue.assignee)
+    .map((issue: Issue) => issue.assignee!.login)
   );
 
   if (contributors.size > 0) {
     content += '\n## Contributors\n';
-    content += 'Thanks to all our contributors for their efforts:\n\n';
+    content += 'Thanks to all our contributors for their efforts on completed issues:\n\n';
     contributors.forEach(contributor => {
       content += `- @${contributor}\n`;
     });
