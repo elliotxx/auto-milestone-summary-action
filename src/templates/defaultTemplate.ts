@@ -1,20 +1,4 @@
-interface Issue {
-  title: string;
-  number: number;
-  state: string;
-  labels: Array<{ name: string }>;
-  assignee?: { login: string };
-}
-
-interface Milestone {
-  title: string;
-  due_on: string | null;
-  description: string;
-}
-
-interface CategorizedIssues {
-  [key: string]: Issue[];
-}
+import { Issue, Milestone, CategorizedIssues } from '../types';
 
 export function generatePlanningContent(
   milestone: Milestone,

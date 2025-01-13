@@ -1,25 +1,37 @@
-import { Context } from '@actions/github/lib/context';
-import { GitHub } from '@actions/github/lib/utils';
-import { handleMilestoneEvent } from './milestoneHandler';
+import * as core from '@actions/core';
+import { handleMilestone } from './milestoneHandler';
+import { ActionContext } from '../types';
 
-interface Config {
-  planningLabel: string;
-  categories: string[];
-}
+export async function handleIssue(context: ActionContext): Promise<void> {
+  try {
+    if (!context.issue?.milestone) {
+      core.info('Issue has no milestone, skipping...');
+      return;
+    }
 
-export async function handleIssueEvent(
-  octokit: InstanceType<typeof GitHub>,
-  context: Context,
-  config: Config
-): Promise<void> {
-  const issue = context.payload.issue;
-  
-  // Only process if issue has a milestone
-  if (issue.milestone) {
-    // Reuse milestone handler logic
-    await handleMilestoneEvent(octokit, {
+    const milestoneNumber = context.issue.milestone.number;
+    core.info(`Processing milestone #${milestoneNumber}`);
+
+    // Create context for milestone handling
+    const milestoneContext: ActionContext = {
       ...context,
-      payload: { milestone: issue.milestone }
-    }, config);
+      payload: {
+        ...context.payload,
+        milestone: {
+          number: milestoneNumber,
+          title: '', // Will be fetched by milestoneHandler
+          description: null,
+          due_on: null
+        }
+      }
+    };
+
+    await handleMilestone(milestoneContext);
+  } catch (error) {
+    if (error instanceof Error) {
+      core.setFailed(error.message);
+    } else {
+      core.setFailed('An unexpected error occurred');
+    }
   }
 }

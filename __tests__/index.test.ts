@@ -1,14 +1,16 @@
 import { generatePlanningContent } from '../src/templates/defaultTemplate';
+import { Issue, Milestone } from '../src/types';
 
 describe('Planning Content Generation', () => {
   it('should generate correct planning content', () => {
-    const milestone = {
+    const milestone: Milestone = {
       title: 'Test Milestone',
       due_on: '2025-12-31',
-      description: 'Test Description'
+      description: 'Test Description',
+      number: 1
     };
     
-    const issues = [
+    const issues: Issue[] = [
       { 
         title: 'Bug 1',
         number: 1,
