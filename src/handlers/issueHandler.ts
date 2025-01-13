@@ -17,6 +17,7 @@ export async function handleIssue(context: ActionContext): Promise<void> {
         ...context,
         payload: {
           ...context.payload,
+          milestone: context.payload.issue.milestone
         }
       });
     } else {

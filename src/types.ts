@@ -33,9 +33,9 @@ export interface ActionContext extends Omit<Context, 'issue' | 'repo'> {
   payload: {
     milestone?: {
       number: number;
-      title: string;
-      description: string | null;
-      due_on: string | null;
+      title?: string | null;
+      description?: string | null;
+      due_on?: string | null;
     };
     issue?: {
       number: number;
