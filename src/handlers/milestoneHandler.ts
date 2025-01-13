@@ -3,11 +3,18 @@ import * as github from '@actions/github';
 import { generatePlanningContent } from '../templates/defaultTemplate';
 import { ActionContext, Issue, Milestone } from '../types';
 
+// GitHub default labels
+const DEFAULT_CATEGORIES = [
+  'bug',
+  'documentation',
+  'enhancement'
+];
+
 export async function handleMilestone(context: ActionContext): Promise<void> {
   try {
     const token = core.getInput('token', { required: true });
     const planningLabel = core.getInput('planning_label') || 'planning';
-    const categoriesInput = core.getInput('categories') || '["bug", "feature", "documentation", "maintenance"]';
+    const categoriesInput = core.getInput('categories') || JSON.stringify(DEFAULT_CATEGORIES);
     const categories = JSON.parse(categoriesInput) as string[];
 
     const octokit = github.getOctokit(token);

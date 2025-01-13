@@ -31,7 +31,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           planning_label: planning
-          categories: '["bug", "feature", "documentation"]'
+          categories: '["bug", "enhancement", "documentation"]'
 ```
 
 2. The action will create a planning issue that looks like this:
@@ -54,7 +54,7 @@ This is our first major release with core features implemented.
 - [x] #1 Fix login page crash
 - [ ] #4 Memory leak in dashboard
 
-### feature (2)
+### enhancement (2)
 - [x] #2 Add user authentication
 - [ ] #3 Implement dashboard
 
@@ -73,7 +73,7 @@ This is our first major release with core features implemented.
 |------|-------------|----------|---------|
 | `token` | GitHub token for API access | Yes | N/A |
 | `planning_label` | Label to identify planning issues | No | `planning` |
-| `categories` | JSON array of category labels | No | `["bug", "feature", "documentation", "maintenance"]` |
+| `categories` | JSON array of category labels | No | `["bug", "documentation", "enhancement"]` |
 
 ### Workflow Examples
 
@@ -145,12 +145,14 @@ jobs:
    - Issues are categorized based on their labels matching the category names
    - Issues without matching category labels go into "Uncategorized"
    - Each issue appears in the first matching category only
+   - By default, uses GitHub's standard labels (`bug`, `enhancement`, etc.)
 
 ## Best Practices
 
 1. **Label Management**:
    - Use consistent labels that match your categories
-   - Consider using label prefixes (e.g., `type: bug`, `type: feature`)
+   - Consider using GitHub's default labels for better integration
+   - Add custom labels only when needed for specific workflows
 
 2. **Milestone Planning**:
    - Add clear descriptions to milestones
