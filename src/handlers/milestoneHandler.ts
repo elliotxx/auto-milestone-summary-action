@@ -54,16 +54,21 @@ export async function handleMilestone(context: ActionContext): Promise<void> {
     }
 
     // Get all issues for this milestone
-    const { data: issues } = await octokit.rest.issues.listForRepo({
+    const { data: allIssues } = await octokit.rest.issues.listForRepo({
       owner,
       repo,
       milestone: String(milestoneNumber),
       state: 'all'
     });
 
+    // Filter out pull requests
+    const issues = allIssues.filter(item => !item.pull_request);
+
     // Log issues info
     core.info('Issues Info:');
-    core.info(`- Total Issues: ${issues.length}`);
+    core.info(`- Total Items: ${allIssues.length}`);
+    core.info(`- Issues (excluding PRs): ${issues.length}`);
+    core.info(`- Pull Requests: ${allIssues.length - issues.length}`);
     core.info(`- Open Issues: ${issues.filter(i => i.state === 'open').length}`);
     core.info(`- Closed Issues: ${issues.filter(i => i.state === 'closed').length}`);
 

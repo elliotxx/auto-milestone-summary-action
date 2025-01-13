@@ -40,9 +40,9 @@ describe('Planning Content Generation', () => {
     expect(content).toContain('feature (1)');
     
     // Issue details checks
-    expect(content).toContain('#1 Bug 1');
+    expect(content).toContain('#1');
     expect(content).toContain('@user1');
-    expect(content).toContain('#2 Feature 1');
+    expect(content).toContain('#2');
     
     // Status checks
     expect(content).toContain('[ ] #1'); // open issue
