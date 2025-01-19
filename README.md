@@ -1,6 +1,6 @@
 # Community Planning Updater
 
-A GitHub Action that streamlines version planning by automatically creating a centralized hub for milestone-related discussions. It tracks changes in milestones and their associated issues in real-time, organizing them into a well-formatted summary that helps maintainers focus on what matters - managing issues and planning versions.
+A GitHub Action that automatically generates and updates community planning based on milestones. It helps project maintainers track all milestone-related issues in one place with smart categorization and rich formatting.
 
 ## Features
 
