@@ -1,5 +1,5 @@
 name: 'Community Planning Updater'
-description: 'Automatically generate and update planning issues based on GitHub milestones'
+description: 'Auto-tracks milestone changes and creates a well-organized summary page for all related issues'
 author: 'elliotxx'
 
 inputs:

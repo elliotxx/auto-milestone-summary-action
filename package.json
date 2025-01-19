@@ -1,7 +1,7 @@
 {
   "name": "community-planning-updater",
   "version": "1.0.0",
-  "description": "GitHub Action to automatically generate and update community planning issues",
+  "description": "Automatically creates a summary page for each milestone to track all related issues",
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.ts -o dist --source-map",
