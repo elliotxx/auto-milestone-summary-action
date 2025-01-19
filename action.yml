@@ -1,4 +1,4 @@
-name: 'Auto Milestone Summary Action'
+name: 'Community Planning Updater'
 description: 'Automatically generate and update planning issues based on GitHub milestones'
 author: 'elliotxx'
 
@@ -25,8 +25,8 @@ runs:
     - name: Checkout action
       uses: actions/checkout@v3
       with:
-        repository: elliotxx/auto-milestone-summary-action
-        path: .github/actions/auto-milestone-summary-action
+        repository: elliotxx/community-planning-updater
+        path: .github/actions/community-planning-updater
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -35,12 +35,12 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      working-directory: .github/actions/auto-milestone-summary-action
+      working-directory: .github/actions/community-planning-updater
       run: npm ci
 
     - name: Build and Run
       shell: bash
-      working-directory: .github/actions/auto-milestone-summary-action
+      working-directory: .github/actions/community-planning-updater
       env:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_PLANNING_LABEL: ${{ inputs.planning_label }}

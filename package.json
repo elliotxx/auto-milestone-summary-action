@@ -1,7 +1,7 @@
 {
-  "name": "auto-milestone-summary-action",
+  "name": "community-planning-updater",
   "version": "1.0.0",
-  "description": "GitHub Action to automatically generate milestone planning issues",
+  "description": "GitHub Action to automatically generate and update community planning issues",
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.ts -o dist --source-map",
