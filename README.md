@@ -12,10 +12,10 @@ A GitHub Action that automatically generates and updates community planning base
 
 ## Usage
 
-1. Create a workflow file (e.g., `.github/workflows/milestone-planning.yml`):
+1. Create a workflow file (e.g., `.github/workflows/community-planning-updater.yml`):
 
 ```yaml
-name: Milestone Planning
+name: Community Planning Updater
 
 on:
   milestone:
@@ -27,7 +27,7 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate Milestone Planning
+      - name: Update Planning
         uses: elliotxx/community-planning-updater@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -88,7 +88,7 @@ Thanks to all our contributors for their efforts on completed issues:
 
 1. **Basic Usage** - Monitor milestone and issue changes:
 ```yaml
-name: Milestone Planning
+name: Community Planning Updater
 on:
   milestone:
     types: [created, edited, deleted]
@@ -105,7 +105,7 @@ jobs:
 
 2. **Custom Categories** - Use your own issue categories:
 ```yaml
-name: Milestone Planning
+name: Community Planning Updater
 on:
   milestone:
     types: [created, edited, deleted]
