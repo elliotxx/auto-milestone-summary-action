@@ -2,6 +2,8 @@
 
 A GitHub Action that automatically generates and updates community planning based on milestones. It helps project maintainers track all milestone-related issues in one place with smart categorization and rich formatting.
 
+> **⚠️ NOTE: The function of this Action has been merged to [OSP Action](https://github.com/elliotxx/osp-action) to provide more and more powerful features! ✨**
+
 ## Features
 
 - 🎯 Auto-aggregates all issues linked to milestones
